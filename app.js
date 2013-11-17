@@ -22,27 +22,16 @@ function y(glon, dist, earth, f) {
     return Math.sin(glon) * dist * _au * f - Math.sin(earth.glon) * earth.dist * _au * f;
 };
 
-function rad(id, rad, f) {
-    if(id == "Earth") {
-        if(0.0000425875046 * _au * f > 5) {
-            return 0.0000425875046 * _au * f;
-        } else {
-            return 5;
-        }
-    } else {
-        if(isNaN(rad)) {
-            return 5;
-        } else {
-            return 2.0 * Math.abs(rad);
-        }
-    }
+function rad(radius, f) {
+    var g = Math.log(1e-9/f)/2.30258509299;
+    return radius * Math.pow(0.5,g);
 }
 
 function init() {
     d3.json(_planets, function(planets) {
         d3.json(_stars, function(stars) {
             data = stars.concat(planets);
-
+            //data = planets;
             _earth = $.grep(planets, function(e){ return e.id === "Earth"; })[0];
 
             var svg = d3.select('#canvas').append('svg')
@@ -60,10 +49,10 @@ function init() {
                 })
                 .attr('cx', function (d) {return x(d.glon, d.dist, _earth, _f);})
                 .attr('cy', function (d) {return y(d.glon, d.dist, _earth, _f);})
-                .attr("r", function (d) {return rad(d.id, d.vmag, _f);})
-                .style('stroke', 'white')
+                .attr("r", function (d) {return rad(d.radius, _f);})
+                .style('stroke', 'silver')
                 .style('fill', function (d) {return d.color;})
-                .style('stroke-width', '0.2');
+                .style('stroke-width', '1');
 
             _old_f = _f;
             _markers[0] = new marker(_start);
@@ -75,7 +64,7 @@ function init() {
                 _g.selectAll("circle").transition()
                     .attr('cx', function (d) {return x(d.glon, d.dist, _earth, f);})
                     .attr('cy', function (d) {return y(d.glon, d.dist, _earth, f);})
-                    .attr("r", function (d) {return rad(d.id, d.vmag, f);});
+                    .attr("r", function (d) {return rad(d.radius, f);});
                 _m.selectAll("line").transition()
                     .attr('x1', 0.0-_f*0.5)
                     .attr('y1', 1*_height/2)

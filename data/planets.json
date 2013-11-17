@@ -1,60 +1,100 @@
 [{
-    "id": "Sun", "year": 2013,
-    "day": 321,  "dist": 0.001,
-    "glat": 0.0, "glon": 0.0,
-    "color": "yellow"
+    "id": "Sun",
+    "year": 2013,
+    "day": 321,
+    "dist": 0.001,
+    "glat": 0.0,
+    "glon": 0.0,
+    "color": "yellow",
+    "radius": 20
 },
 {
-	"id": "ISS", "year": 2013,
-	"day": 321,	"dist": 0.989,
-	"glat": -30.05351,	"glon": 167.02297,
-    "color": "white" 
+	"id": "ISS",
+    "year": 2013,
+	"day": 321,
+    "dist": 0.989,
+	"glat": -30.05351,
+    "glon": 167.02297,
+    "color": "white",
+    "radius": 2 
 },
 {
-	"id": "Earth",	"year": 2013,
-	"day": 321,	"dist": 0.989,
-	"glat": -30.05351,	"glon": 167.02297,
-    "color": "blue"
+	"id": "Earth",
+    "year": 2013,
+	"day": 321,
+    "dist": 0.989,
+	"glat": -30.05351,
+    "glon": 167.02297,
+    "color": "blue",
+    "radius": 5
 },
 {
-	"id": "Mercury",	"year":	2013,
-	"day": 321,	"dist": 0.331,
-	"glat": 39.42418,	"glon": 203.25717,
-    "color": "brown"
+	"id": "Mercury",
+    "year":	2013,
+	"day": 321,
+    "dist": 0.331,
+	"glat": 39.42418,
+    "glon": 203.25717,
+    "color": "brown",
+    "radius": 3
 },
 {
-	"id": "Venus",	"year":	2013,
-	"day": 321,	"dist": 0.725,
-	"glat": -55.95814,	"glon": 137.94291,
-    "color": "#00FFFF"
+	"id": "Venus",
+    "year":	2013,
+	"day": 321,
+    "dist": 0.725,
+	"glat": -55.95814,
+    "glon": 137.94291,
+    "color": "#00FFFF",
+    "radius": 5
 },
 {
-	"id": "Mars",	"year":	2013,
-	"day": 321,	"dist": 1.655,
-	"glat": 39.65418,	"glon": 211.63537,
-    "color": "red"
+	"id": "Mars",
+    "year":	2013,
+	"day": 321,
+    "dist": 1.655,
+	"glat": 39.65418,
+    "glon": 211.63537,
+    "color": "red",
+    "radius": 4
 },
 {
-	"id": "Jupiter",	"year":	2013,
-	"day": 321,	"dist": 5.171,
-	"glat": 9.64423,	"glon": 191.95974,
-    "color": "brown"
+	"id": "Jupiter",
+    "year":	2013,
+	"day": 321,
+    "dist": 5.171,
+	"glat": 9.64423,
+    "glon": 191.95974,
+    "color": "brown",
+    "radius": 10
 },
 {
-	"id": "Saturn",	"year":	2013,
-	"day": 321,	"dist": 9.862,
-	"glat": 39.05773,	"glon": 342.48555,
-    "color": "#808000"
+	"id": "Saturn",
+    "year":	2013,
+	"day": 321,
+    "dist": 9.862,
+	"glat": 39.05773,
+    "glon": 342.48555,
+    "color": "#808000",
+    "radius": 10
 },
 {
-        "id": "Uranus", "year": 2013,
-        "day": 321,     "dist": 19.991,
-        "glat": -58.91393,       "glon": 118.94556,
-    "color": "green"
+    "id": "Uranus",
+    "year": 2013,
+    "day": 321,
+    "dist": 19.991,
+    "glat": -58.91393,
+    "glon": 118.94556,
+    "color": "green",
+    "radius": 10
 },
 {
-        "id": "Neptun", "year": 2013,
-        "day": 321,     "dist": 29.923,
-        "glat":  -52.15583,       "glon": 342.48555,
-    "color": "#000080"
+    "id": "Neptun",
+    "year": 2013,
+    "day": 321,
+    "dist": 29.923,
+    "glat":  -52.15583,
+    "glon": 342.48555,
+    "color": "#000080",
+    "radius": 10
 }]
