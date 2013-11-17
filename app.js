@@ -2,25 +2,26 @@ _width = 800;
 _height = 600;
 _stars = "data/hipparcos.json";
 _planets = "data/planets.json";
-_start = 0;
-_f = 100;
+_start = 11;
+_f = 100 * Math.pow(10, -1.0 * _start);
 _t = 10000;
+_au = 149597870700;
 var _earth;
 var _markers = new Array();
 var _old_f;
 
 function x(glon, dist, earth, f) {
-    return Math.cos(glon) * dist * f - Math.cos(earth.glon) * earth.dist * f;
+    return Math.cos(glon) * dist * _au * f - Math.cos(earth.glon) * earth.dist * _au * f;
 };
 
 function y(glon, dist, earth, f) {
-    return Math.sin(glon) * dist * f - Math.sin(earth.glon) * earth.dist * f;
+    return Math.sin(glon) * dist * _au * f - Math.sin(earth.glon) * earth.dist * _au * f;
 };
 
 function rad(id, rad, f) {
     if(id == "Earth") {
-        if(0.0000425875046 * f > 5) {
-            return 0.0000425875046 * f;
+        if(0.0000425875046 * _au * f > 5) {
+            return 0.0000425875046 * _au * f;
         } else {
             return 5;
         }
@@ -77,7 +78,7 @@ function init() {
             _markers[1] = new marker(_start+1);
 
             d3.select("input[type=range]").on("change", function() {
-                f = _f * Math.pow(10,-this.value);
+                f = 100 * Math.pow(10,-this.value);
                 scale = Math.pow(10, this.value);
                 g.selectAll("circle").transition()
                     .attr('cx', function (d) {return x(d.glon, d.dist, _earth, f);})
@@ -139,7 +140,7 @@ function marker (scale) {
                     .style('fill', 'transparent');
 
     this.text = d3.select("svg > g").append("text")
-                    .text(this.scale + " AU")
+                    .text(this.scale.toExponential() + " m")
                     .attr('x', function (d) {return 0.0 - this.scale*_f*0.5 - (this.getComputedTextLength() / 2.0);})
                     .attr('y', 0.0-this.scale*_f*0.5 - 10.0)
                     .attr("fill", "white");
@@ -151,7 +152,7 @@ function marker (scale) {
                 .attr('width', this.scale*f)
                 .attr('height', this.scale*f);
         this.text.transition()
-                .text(this.scale + " AU")
+                .text(this.scale.toExponential() + " m")
                 .attr('x', function (d) {return 0.0 - this.scale*f*0.5 - (this.getComputedTextLength() / 2.0);})
                 .attr('y', 0.0-this.scale*f*0.5 - 10.0);
     };
