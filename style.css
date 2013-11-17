@@ -1,0 +1,12 @@
+body { 
+    background-color: black;
+}
+#canvas {
+
+}
+#info {
+    color: #fff;
+}
+input[type=range] {
+    width: 400px;
+}
