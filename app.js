@@ -36,8 +36,8 @@ function init() {
                 .attr('width', _width)
                 .attr('height', _height);
 
-            _m = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
             _g = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
+            _m = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
 
             _g.selectAll('circle').data(data).enter().append("circle")
                 .on("click", function(d,i) {
@@ -109,14 +109,46 @@ function init() {
 function marker(scale) {
     this.logScale = scale;
     this.scale = Math.pow(10, Math.floor(scale));
-    this.square = _m.append("rect")
+/*    this.square = _m.append("rect")
                     .attr('x', 0.0-this.scale*_f*0.5)
                     .attr('y', 0.0-this.scale*_f*0.5)
                     .attr('width', this.scale*_f)
                     .attr('height', this.scale*_f)
                     .style('stroke', 'white')
                     .style('stroke-width', '2')
-                    .style('fill', 'transparent');
+                    .style('fill', 'transparent');*/
+
+    this.line1 = _m.append("line")
+                    .attr('x1', 0.0-this.scale*_f*0.5)
+                    .attr('y1', 0.0-this.scale*_f*0.5)
+                    .attr('x2', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('y2', 0.0-this.scale*_f*0.5)
+                    .style('stroke', 'white')
+                    .style('stroke-width', '2');
+
+    this.line2 = _m.append("line")
+                    .attr('x1', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('y1', 0.0-this.scale*_f*0.5)
+                    .attr('x2', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('y2', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .style('stroke', 'white')
+                    .style('stroke-width', '2');
+
+    this.line3 = _m.append("line")
+                    .attr('x1', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('y1', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('x2', 0.0-this.scale*_f*0.5)
+                    .attr('y2', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .style('stroke', 'white')
+                    .style('stroke-width', '2');
+
+    this.line4 = _m.append("line")
+                    .attr('x1', 0.0-this.scale*_f*0.5)
+                    .attr('y1', 0.0-this.scale*_f*0.5 + this.scale*_f)
+                    .attr('x2', 0.0-this.scale*_f*0.5)
+                    .attr('y2', 0.0-this.scale*_f*0.5)
+                    .style('stroke', 'white')
+                    .style('stroke-width', '2');
 
     this.text = _m.append("text")
                     .text(this.scale + " AU")
@@ -125,11 +157,36 @@ function marker(scale) {
                     .attr("fill", "white");
 
     this.update = function(f) {
-        this.square.transition()
+/*        this.square.transition()
                 .attr('x', 0.0-this.scale*f*0.5)
                 .attr('y', 0.0-this.scale*f*0.5)
                 .attr('width', this.scale*f)
-                .attr('height', this.scale*f);
+                .attr('height', this.scale*f);*/
+
+        this.line1.transition()
+            .attr('x1', 0.0-this.scale*f*0.5)
+            .attr('y1', 0.0-this.scale*f*0.5)
+            .attr('x2', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('y2', 0.0-this.scale*f*0.5);
+
+        this.line2.transition()
+            .attr('x1', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('y1', 0.0-this.scale*f*0.5)
+            .attr('x2', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('y2', 0.0-this.scale*f*0.5 + this.scale*f);
+
+        this.line3.transition()
+            .attr('x1', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('y1', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('x2', 0.0-this.scale*f*0.5)
+            .attr('y2', 0.0-this.scale*f*0.5 + this.scale*f);
+
+        this.line4.transition()
+            .attr('x1', 0.0-this.scale*f*0.5)
+            .attr('y1', 0.0-this.scale*f*0.5 + this.scale*f)
+            .attr('x2', 0.0-this.scale*f*0.5)
+            .attr('y2', 0.0-this.scale*f*0.5);
+
         this.text.transition()
                 .text(this.scale.toExponential() + " m")
                 .attr('x', function (d) {return 0.0 - this.scale*f*0.5 - (this.getComputedTextLength() / 2.0);})
@@ -137,7 +194,11 @@ function marker(scale) {
     };
 
     this.remove = function() {
-        this.square.remove();
+        //this.square.remove();
+        this.line1.remove();
+        this.line2.remove();
+        this.line3.remove();
+        this.line4.remove();
         this.text.remove();
     }
 };
