@@ -2,7 +2,7 @@ _width = 940;
 _height = 500;
 _stars = "data/hipparcos.json";
 _planets = "data/planets.json";
-_start = 11;
+_start = 1;
 _f = 100 * Math.pow(10, -1.0 * _start);
 _t = 10000;
 _au = 149597870700;
@@ -54,6 +54,16 @@ function init() {
                 .style('fill', function (d) {return d.color;})
                 .style('stroke-width', '1');
 
+            //images
+            _img1 = _g.selectAll("image").data([0]).enter().append("svg:image")
+                        .attr("xlink:href", "data/100m.jpg")
+                        .attr("x", 0.0 - 100.0 * _f / 2)
+                        .attr("y", 0.0 - 100.0 * _f / 2)
+                        .attr("width", 100.0 * _f)
+                        .attr("height", 100.0 * _f);
+
+
+
             _old_f = _f;
             _markers[0] = new marker(_start);
             _markers[1] = new marker(_start+1);
@@ -72,6 +82,14 @@ function init() {
                     .attr('y2', 1*_height/2)
                     .style('stroke', 'white')
                     .style('stroke-width', '2');
+
+                _img1.transition()
+                    .attr("x", 0.0 - 100.0 * f / 2)
+                    .attr("y", 0.0 - 100.0 * f / 2)
+                    .attr("width", 100.0 * f)
+                    .attr("height", 100.0 * f);
+
+
 
                 //update the square markers and add new if needed
                 if(_old_f >= f) {
@@ -145,7 +163,7 @@ function marker(scale) {
                     .style('stroke-width', '2');
 
     this.text = _m.append("text")
-                    .text(this.scale + " AU")
+                    .text(this.scale.toExponential() + " m")
                     .attr('x', function (d) {return 0.0 - this.scale*_f*0.5 - (this.getComputedTextLength() / 2.0);})
                     .attr('y', 0.0-this.scale*_f*0.5 - 10.0)
                     .attr("fill", "white");
