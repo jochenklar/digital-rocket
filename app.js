@@ -10,6 +10,8 @@ var _earth;
 var _markers = new Array();
 var _old_f;
 
+var _img1;
+
 var _m,_g;
 
 function x(glon, dist, earth, f) {
@@ -120,14 +122,6 @@ function init() {
 function marker(scale) {
     this.logScale = scale;
     this.scale = Math.pow(10, Math.floor(scale));
-/*    this.square = _m.append("rect")
-                    .attr('x', 0.0-this.scale*_f*0.5)
-                    .attr('y', 0.0-this.scale*_f*0.5)
-                    .attr('width', this.scale*_f)
-                    .attr('height', this.scale*_f)
-                    .style('stroke', 'white')
-                    .style('stroke-width', '2')
-                    .style('fill', 'transparent');*/
 
     this.line1 = _m.append("line")
                     .attr('x1', 0.0-this.scale*_f*0.5)
@@ -168,12 +162,6 @@ function marker(scale) {
                     .attr("fill", "white");
 
     this.update = function(f) {
-/*        this.square.transition()
-                .attr('x', 0.0-this.scale*f*0.5)
-                .attr('y', 0.0-this.scale*f*0.5)
-                .attr('width', this.scale*f)
-                .attr('height', this.scale*f);*/
-
         this.line1.transition()
             .attr('x1', 0.0-this.scale*f*0.5)
             .attr('y1', 0.0-this.scale*f*0.5)
@@ -205,7 +193,6 @@ function marker(scale) {
     };
 
     this.remove = function() {
-        //this.square.remove();
         this.line1.remove();
         this.line2.remove();
         this.line3.remove();
