@@ -10,6 +10,8 @@ var _markers = new Array();
 var _old_f;
 var _scaleText;
 
+var _m,_g;
+
 function x(glon, dist, earth, f) {
     return Math.cos(glon) * dist * f - Math.cos(earth.glon) * earth.dist * f;
 };
@@ -29,23 +31,9 @@ function rad(id, rad, f) {
         if(isNaN(rad)) {
             return 5;
         } else {
-            return 0.5*Math.abs(rad);
+            return 2.0 * Math.abs(rad);
         }
     }
-}
-
-function planetColors(id) {
-    var v;
-    if (id == 'Sun') {
-        v =  'yellow';
-    } else if (id == 'Earth') {
-        v = 'blue';
-    } else if (id % 1 === 0){
-        v = 'orange';
-    } else {
-        v = 'silver'
-    }
-    return v;
 }
 
 function init() {
@@ -59,10 +47,12 @@ function init() {
                 .attr('width', _width)
                 .attr('height', _height);
 
-            var g = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
+            _m = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
+            _g = svg.append('g').attr('transform','translate(' + _width/2 + ',' + _height/2 +')');
 
-            d3.select("svg > g").selectAll('circle').data(data).enter().append("circle")
-                .on("click", function(d,i) { 
+            _g.selectAll('circle').data(data).enter().append("circle")
+                .on("click", function(d,i) {
+                    console.log(d.id);
                     $('#info').children().remove();
                     $('#info').append('<p>' + d.id + '</p>');
                 })
@@ -70,10 +60,10 @@ function init() {
                 .attr('cy', function (d) {return y(d.glon, d.dist, _earth, _f);})
                 .attr("r", function (d) {return rad(d.id, d.vmag, _f);})
                 .style('stroke', 'white')
-                .style('fill', function (d) {return planetColors(d.id);})
+                .style('fill', function (d) {return d.color;})
                 .style('stroke-width', '0.2');
 
-            d3.select("svg > g").append("line")
+            _m.append("line")
                 .attr('x1', 0.0-_f*0.5)
                 .attr('y1', 1*_height/2)
                 .attr('x2', 0.0+_f*0.5)
@@ -82,10 +72,10 @@ function init() {
                 .style('stroke-width', '2');
 
             _old_f = _f;
-            _markers[0] = new  marker(_start);
+            _markers[0] = new marker(_start);
             _markers[1] = new marker(_start+1);
 
-            _scaleText = d3.select("svg > g").append("text")
+            _scaleText = _m.append("text")
                 .text(function (d) { return Math.pow(10, Math.floor(_start)) + " AU"; })
                 .attr('x', function (d) {return 0.0 - (this.getComputedTextLength() / 2.0);})
                 .attr('y', 1*_height/2-0.05*_f)
@@ -94,11 +84,11 @@ function init() {
             d3.select("input[type=range]").on("change", function() {
                 f = _f * Math.pow(10,-this.value);
                 scale = Math.pow(10, this.value);
-                g.selectAll("circle").transition()
+                _g.selectAll("circle").transition()
                     .attr('cx', function (d) {return x(d.glon, d.dist, _earth, f);})
                     .attr('cy', function (d) {return y(d.glon, d.dist, _earth, f);})
                     .attr("r", function (d) {return rad(d.id, d.vmag, f);});
-                g.selectAll("line").transition()
+                _m.selectAll("line").transition()
                     .attr('x1', 0.0-_f*0.5)
                     .attr('y1', 1*_height/2)
                     .attr('x2', 0.0+_f*0.5)
@@ -123,7 +113,6 @@ function init() {
                     _markers[1] = new marker(Math.floor(parseFloat(this.value)+1.0));
                 }
 
-
                 _markers[0].update(f);
                 _markers[1].update(f);
 
@@ -134,10 +123,10 @@ function init() {
     });
 };
 
-function marker (scale) {
+function marker(scale) {
     this.logScale = scale;
     this.scale = Math.pow(10, Math.floor(scale));
-    this.square = d3.select("svg > g").append("rect")
+    this.square = _m.append("rect")
                     .attr('x', 0.0-this.scale*_f*0.5)
                     .attr('y', 0.0-this.scale*_f*0.5)
                     .attr('width', this.scale*_f)
@@ -146,7 +135,7 @@ function marker (scale) {
                     .style('stroke-width', '2')
                     .style('fill', 'transparent');
 
-    this.text = d3.select("svg > g").append("text")
+    this.text = _m.append("text")
                     .text(this.scale + " AU")
                     .attr('x', function (d) {return 0.0 - this.scale*_f*0.5 - (this.getComputedTextLength() / 2.0);})
                     .attr('y', 0.0-this.scale*_f*0.5 - 0.05*_f)
