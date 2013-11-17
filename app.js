@@ -243,5 +243,11 @@ function marker(scale) {
 
 $(document).ready(function () {
     init();
+
+    // $('#launch').on('click', function () {
+    //     var i = $('#slider').val();
+    //     console.log(i);
+    //     $('#slider').val(i+1);
+    // });
 });
 

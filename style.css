@@ -1,6 +1,10 @@
 body { 
     background-color: black;
 }
+#title {
+    margin-top: 20px;
+    color: red;
+}
 #canvas {
     margin-top: 20px;
 }
@@ -9,4 +13,5 @@ body {
 }
 input[type=range] {
     width: 400px;
+    margin-top: 10px;
 }
