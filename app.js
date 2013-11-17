@@ -11,6 +11,8 @@ var _markers = new Array();
 var _old_f;
 
 var _img1;
+var _img2;
+var _img3;
 
 var _m,_g;
 
@@ -22,7 +24,15 @@ function y(glon, dist, earth, f) {
     return Math.sin(glon) * dist * _au * f - Math.sin(earth.glon) * earth.dist * _au * f;
 };
 
-function rad(radius, f) {
+function rad(id, radius, f) {
+    if(id == "Earth") {
+        if(0.0000425875046 * _au * f > 5) {
+            return 0.0000425875046 * _au * f;
+        } else {
+            return 5;
+        }
+    }
+
     var g = Math.log(1e-9/f)/2.30258509299;
     return radius * Math.pow(0.5,g);
 }
@@ -49,20 +59,32 @@ function init() {
                 })
                 .attr('cx', function (d) {return x(d.glon, d.dist, _earth, _f);})
                 .attr('cy', function (d) {return y(d.glon, d.dist, _earth, _f);})
-                .attr("r", function (d) {return rad(d.radius, _f);})
+                .attr("r", function (d) {return rad(d.id, d.radius, _f);})
                 .style('stroke', 'silver')
                 .style('fill', function (d) {return d.color;})
                 .style('stroke-width', '1');
 
             //images
-            _img1 = _g.selectAll("image").data([0]).enter().append("svg:image")
+            _img3 = _g.append("svg:image")
+                        .attr("xlink:href", "data/1000000m.jpg")
+                        .attr("x", 0.0 - 1000000.0 * _f / 2)
+                        .attr("y", 0.0 - 1000000.0 * _f / 2)
+                        .attr("width", 1000000.0 * _f)
+                        .attr("height", 1000000.0 * _f);
+
+            _img2 = _g.append("svg:image")
+                        .attr("xlink:href", "data/10000m.jpg")
+                        .attr("x", 0.0 - 10000.0 * _f / 2)
+                        .attr("y", 0.0 - 10000.0 * _f / 2)
+                        .attr("width", 10000.0 * _f)
+                        .attr("height", 10000.0 * _f);
+
+            _img1 = _g.append("svg:image")
                         .attr("xlink:href", "data/100m.jpg")
                         .attr("x", 0.0 - 100.0 * _f / 2)
                         .attr("y", 0.0 - 100.0 * _f / 2)
                         .attr("width", 100.0 * _f)
                         .attr("height", 100.0 * _f);
-
-
 
             _old_f = _f;
             _markers[0] = new marker(_start);
@@ -74,7 +96,7 @@ function init() {
                 _g.selectAll("circle").transition()
                     .attr('cx', function (d) {return x(d.glon, d.dist, _earth, f);})
                     .attr('cy', function (d) {return y(d.glon, d.dist, _earth, f);})
-                    .attr("r", function (d) {return rad(d.radius, f);});
+                    .attr("r", function (d) {return rad(d.id, d.radius, f);});
                 _m.selectAll("line").transition()
                     .attr('x1', 0.0-_f*0.5)
                     .attr('y1', 1*_height/2)
@@ -89,6 +111,17 @@ function init() {
                     .attr("width", 100.0 * f)
                     .attr("height", 100.0 * f);
 
+                _img2.transition()
+                    .attr("x", 0.0 - 10000.0 * f / 2)
+                    .attr("y", 0.0 - 10000.0 * f / 2)
+                    .attr("width", 10000.0 * f)
+                    .attr("height", 10000.0 * f);
+
+                _img3.transition()
+                    .attr("x", 0.0 - 1000000.0 * f / 2)
+                    .attr("y", 0.0 - 1000000.0 * f / 2)
+                    .attr("width", 1000000.0 * f)
+                    .attr("height", 1000000.0 * f);
 
 
                 //update the square markers and add new if needed
