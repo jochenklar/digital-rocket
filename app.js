@@ -1,5 +1,5 @@
-_width = 800;
-_height = 600;
+_width = 940;
+_height = 500;
 _stars = "data/hipparcos.json";
 _planets = "data/planets.json";
 _start = 11;

@@ -2,7 +2,7 @@ body {
     background-color: black;
 }
 #canvas {
-
+    margin-top: 20px;
 }
 #info {
     color: #fff;
