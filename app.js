@@ -2,28 +2,28 @@ _width = 940;
 _height = 500;
 _stars = "data/hipparcos.json";
 _planets = "data/planets.json";
-_start = 0;
-_f = 100;
+_start = 11;
+_f = 100 * Math.pow(10, -1.0 * _start);
 _t = 10000;
+_au = 149597870700;
 var _earth;
 var _markers = new Array();
 var _old_f;
-var _scaleText;
 
 var _m,_g;
 
 function x(glon, dist, earth, f) {
-    return Math.cos(glon) * dist * f - Math.cos(earth.glon) * earth.dist * f;
+    return Math.cos(glon) * dist * _au * f - Math.cos(earth.glon) * earth.dist * _au * f;
 };
 
 function y(glon, dist, earth, f) {
-    return Math.sin(glon) * dist * f - Math.sin(earth.glon) * earth.dist * f;
+    return Math.sin(glon) * dist * _au * f - Math.sin(earth.glon) * earth.dist * _au * f;
 };
 
 function rad(id, rad, f) {
     if(id == "Earth") {
-        if(0.0000425875046 * f > 5) {
-            return 0.0000425875046 * f;
+        if(0.0000425875046 * _au * f > 5) {
+            return 0.0000425875046 * _au * f;
         } else {
             return 5;
         }
@@ -63,23 +63,9 @@ function init() {
                 .style('fill', function (d) {return d.color;})
                 .style('stroke-width', '0.2');
 
-            _m.append("line")
-                .attr('x1', 0.0-_f*0.5)
-                .attr('y1', 1*_height/2)
-                .attr('x2', 0.0+_f*0.5)
-                .attr('y2', 1*_height/2)
-                .style('stroke', 'white')
-                .style('stroke-width', '2');
-
             _old_f = _f;
             _markers[0] = new marker(_start);
             _markers[1] = new marker(_start+1);
-
-            _scaleText = _m.append("text")
-                .text(function (d) { return Math.pow(10, Math.floor(_start)) + " AU"; })
-                .attr('x', function (d) {return 0.0 - (this.getComputedTextLength() / 2.0);})
-                .attr('y', 1*_height/2-0.05*_f)
-                .attr("fill", "white");
 
             d3.select("input[type=range]").on("change", function() {
                 f = _f * Math.pow(10,-this.value);
@@ -95,22 +81,30 @@ function init() {
                     .attr('y2', 1*_height/2)
                     .style('stroke', 'white')
                     .style('stroke-width', '2');
-                _scaleText.transition()
-                    .text(function (d) { return scale + " AU"; })
-                    .attr('y', 1*_height/2-0.05*_f)
-                    .attr("fill", "white")
-                    .attr('x', function (d) {return 0.0 - (this.getComputedTextLength() / 2.0);});
-
 
                 //update the square markers and add new if needed
-                if((Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _width ||
-                    Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _height ||
-                    parseFloat(this.value)+1 == _markers[1].logScale+1) &&
-                    _markers[1].logScale < Math.floor(parseFloat(this.value)+1)) {
+                if(_old_f >= f) {
+                    //zooming out
+                    if((Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _width ||
+                        Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _height ||
+                        parseFloat(this.value)+1 == _markers[1].logScale+1) &&
+                        _markers[1].logScale < Math.floor(parseFloat(this.value)+1)) {
 
-                    _markers[0].remove();
-                    _markers[0] = _markers[1];
-                    _markers[1] = new marker(Math.floor(parseFloat(this.value)+1.0));
+                        _markers[0].remove();
+                        _markers[0] = _markers[1];
+                        _markers[1] = new marker(Math.floor(parseFloat(this.value)+1.0));
+                    }
+                } else {
+                    //zooming in
+                    if((Math.pow(10, Math.floor(parseFloat(this.value))) * f > 1 ||
+                        Math.pow(10, Math.floor(parseFloat(this.value))) * f > 1 ||
+                        parseFloat(this.value) == _markers[0].logScale-1) &&
+                        _markers[0].logScale > Math.floor(parseFloat(this.value))) {
+
+                        _markers[1].remove();
+                        _markers[1] = _markers[0];
+                        _markers[0] = new marker(Math.floor(parseFloat(this.value)));
+                    }
                 }
 
                 _markers[0].update(f);
@@ -138,7 +132,7 @@ function marker(scale) {
     this.text = _m.append("text")
                     .text(this.scale + " AU")
                     .attr('x', function (d) {return 0.0 - this.scale*_f*0.5 - (this.getComputedTextLength() / 2.0);})
-                    .attr('y', 0.0-this.scale*_f*0.5 - 0.05*_f)
+                    .attr('y', 0.0-this.scale*_f*0.5 - 10.0)
                     .attr("fill", "white");
 
     this.update = function(f) {
@@ -148,9 +142,9 @@ function marker(scale) {
                 .attr('width', this.scale*f)
                 .attr('height', this.scale*f);
         this.text.transition()
-                .text(this.scale + " AU")
+                .text(this.scale.toExponential() + " m")
                 .attr('x', function (d) {return 0.0 - this.scale*f*0.5 - (this.getComputedTextLength() / 2.0);})
-                .attr('y', 0.0-this.scale*f*0.5 - 0.05*f);
+                .attr('y', 0.0-this.scale*f*0.5 - 10.0);
     };
 
     this.remove = function() {
