@@ -1,5 +1,5 @@
-_width = 940;
-_height = 500;
+_width = 800;
+_height = 600;
 _stars = "data/hipparcos.json";
 _planets = "data/planets.json";
 _start = 0;
@@ -83,6 +83,7 @@ function init() {
 
             _old_f = _f;
             _markers[0] = new  marker(_start);
+            _markers[1] = new marker(_start+1);
 
             _scaleText = d3.select("svg > g").append("text")
                 .text(function (d) { return Math.pow(10, Math.floor(_start)) + " AU"; })
@@ -112,7 +113,21 @@ function init() {
 
 
                 //update the square markers and add new if needed
+                if((Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _width ||
+                    Math.pow(10, Math.floor(parseFloat(this.value)+1)) * f <= _height ||
+                    parseFloat(this.value)+1 == _markers[1].logScale+1) &&
+                    _markers[1].logScale < Math.floor(parseFloat(this.value)+1)) {
+
+                    _markers[0].remove();
+                    _markers[0] = _markers[1];
+                    _markers[1] = new marker(Math.floor(parseFloat(this.value)+1.0));
+                }
+
+
                 _markers[0].update(f);
+                _markers[1].update(f);
+
+                _old_f = f;
             });
 
         });
@@ -120,6 +135,7 @@ function init() {
 };
 
 function marker (scale) {
+    this.logScale = scale;
     this.scale = Math.pow(10, Math.floor(scale));
     this.square = d3.select("svg > g").append("rect")
                     .attr('x', 0.0-this.scale*_f*0.5)
@@ -129,11 +145,13 @@ function marker (scale) {
                     .style('stroke', 'white')
                     .style('stroke-width', '2')
                     .style('fill', 'transparent');
+
     this.text = d3.select("svg > g").append("text")
                     .text(this.scale + " AU")
                     .attr('x', function (d) {return 0.0 - this.scale*_f*0.5 - (this.getComputedTextLength() / 2.0);})
                     .attr('y', 0.0-this.scale*_f*0.5 - 0.05*_f)
                     .attr("fill", "white");
+
     this.update = function(f) {
         this.square.transition()
                 .attr('x', 0.0-this.scale*f*0.5)
@@ -144,6 +162,11 @@ function marker (scale) {
                 .text(this.scale + " AU")
                 .attr('x', function (d) {return 0.0 - this.scale*f*0.5 - (this.getComputedTextLength() / 2.0);})
                 .attr('y', 0.0-this.scale*f*0.5 - 0.05*f);
+    };
+
+    this.remove = function() {
+        this.square.remove();
+        this.text.remove();
     }
 };
 
